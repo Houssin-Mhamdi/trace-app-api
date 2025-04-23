@@ -26,14 +26,14 @@ exports.importExcel = [
       // Validate and save each trace to the database
       const savedTraces = [];
       for (const traceData of traces) {
-        const { numSerie, operation, trace, date } = traceData;
+        const { numSerie, operation, traceDesc, date } = traceData;
 
-        if (!numSerie || !operation  || !date) {
+        if (!numSerie || !operation || !traceDesc || !date) {
           console.warn("Skipping invalid trace:", traceData);
           continue; // Skip invalid entries
         }
 
-        const newTrace = new Trace({ numSerie, operation, date });
+        const newTrace = new Trace({ numSerie, operation, traceDesc, date });
         await newTrace.save();
         savedTraces.push(newTrace);
       }
