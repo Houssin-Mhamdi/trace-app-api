@@ -28,12 +28,12 @@ exports.importExcel = [
       for (const traceData of traces) {
         const { numSerie, operation, trace, date } = traceData;
 
-        if (!numSerie || !operation || !trace || !date) {
+        if (!numSerie || !operation  || !date) {
           console.warn("Skipping invalid trace:", traceData);
           continue; // Skip invalid entries
         }
 
-        const newTrace = new Trace({ numSerie, operation, trace, date });
+        const newTrace = new Trace({ numSerie, operation, date });
         await newTrace.save();
         savedTraces.push(newTrace);
       }
