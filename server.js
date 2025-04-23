@@ -8,7 +8,7 @@ const userRoutes = require("./routes/userRoutes");
 const traceRoutes = require("./routes/traceRoutes");
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4258;
 app.use(cors());
 app.use(express.json());
 
