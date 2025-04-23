@@ -51,7 +51,7 @@ exports.importExcel = [
 
 // Get filtered traces
 exports.getFilteredTraces = async (req, res) => {
-  const { numSerie, operation, trace, startDate, endDate } = req.query;
+  const { numSerie, operation, traceDesc, startDate, endDate } = req.query;
 
   const filters = {};
 
