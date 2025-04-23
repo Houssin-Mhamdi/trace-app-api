@@ -1,14 +1,14 @@
-const Trace = require('../models/Trace');
+const Trace = require("../models/Trace");
 
-const multer = require('multer');
-const xlsx = require('xlsx');
+const multer = require("multer");
+const xlsx = require("xlsx");
 
 // Configure multer for file uploads
-const upload = multer({ dest: 'uploads/' }); // Files will be temporarily stored in the "uploads" folder
+const upload = multer({ dest: "uploads/" }); // Files will be temporarily stored in the "uploads" folder
 
 // Import Excel file and save traces
 exports.importExcel = [
-  upload.single('file'), // Middleware to handle single file upload
+  upload.single("file"), // Middleware to handle single file upload
   async (req, res) => {
     try {
       if (!req.file) {
@@ -26,14 +26,14 @@ exports.importExcel = [
       // Validate and save each trace to the database
       const savedTraces = [];
       for (const traceData of traces) {
-        const { numSerie, operation, date } = traceData;
+        const { numSerie, operation, trace, date } = traceData;
 
-        if (!numSerie || !operation || !date) {
+        if (!numSerie || !operation || !trace || !date) {
           console.warn("Skipping invalid trace:", traceData);
           continue; // Skip invalid entries
         }
 
-        const newTrace = new Trace({ numSerie, operation, date });
+        const newTrace = new Trace({ numSerie, operation, trace, date });
         await newTrace.save();
         savedTraces.push(newTrace);
       }
@@ -51,7 +51,7 @@ exports.importExcel = [
 
 // Get filtered traces
 exports.getFilteredTraces = async (req, res) => {
-  const { numSerie, operation, startDate, endDate } = req.query;
+  const { numSerie, operation, trace, startDate, endDate } = req.query;
 
   const filters = {};
 
@@ -61,6 +61,10 @@ exports.getFilteredTraces = async (req, res) => {
   }
   if (operation) {
     filters.operation = { $regex: new RegExp(operation, "i") }; // Case-insensitive regex
+  }
+
+  if (trace) {
+    filters.trace = { $regex: new RegExp(trace, "i") }; // Case-insensitive regex
   }
 
   // Date range filter
@@ -78,12 +82,14 @@ exports.getFilteredTraces = async (req, res) => {
 };
 // Create a new trace
 exports.createTrace = async (req, res) => {
-  const { numSerie, operation, date } = req.body;
+  const { numSerie, operation, trace, date } = req.body;
 
   try {
-    const newTrace = new Trace({ numSerie, operation, date });
+    const newTrace = new Trace({ numSerie, operation, trace, date });
     await newTrace.save();
-    res.status(201).json({ message: "Trace created successfully", trace: newTrace });
+    res
+      .status(201)
+      .json({ message: "Trace created successfully", trace: newTrace });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to create trace" });
@@ -106,12 +112,12 @@ exports.getTraceById = async (req, res) => {
 
 // Edit a trace
 exports.editTrace = async (req, res) => {
-  const { numSerie, operation, date } = req.body;
+  const { numSerie, operation, trace, date } = req.body;
 
   try {
     const updatedTrace = await Trace.findByIdAndUpdate(
       req.params.id,
-      { numSerie, operation, date },
+      { numSerie, operation, trace, date },
       { new: true } // Return the updated document
     );
 

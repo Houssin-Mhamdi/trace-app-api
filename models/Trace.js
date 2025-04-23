@@ -1,9 +1,10 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const traceSchema = new mongoose.Schema({
   numSerie: String,
   operation: String,
-  date: Date
+  trace: String,
+  date: Date,
 });
 
-module.exports = mongoose.model('Trace', traceSchema);
+module.exports = mongoose.model("Trace", traceSchema);
