@@ -63,8 +63,8 @@ exports.getFilteredTraces = async (req, res) => {
     filters.operation = { $regex: new RegExp(operation, "i") }; // Case-insensitive regex
   }
 
-  if (trace) {
-    filters.trace = { $regex: new RegExp(trace, "i") }; // Case-insensitive regex
+  if (traceDesc) {
+    filters.traceDesc = { $regex: new RegExp(traceDesc, "i") }; // Case-insensitive regex
   }
 
   // Date range filter
